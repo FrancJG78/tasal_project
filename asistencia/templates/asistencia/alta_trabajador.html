@@ -1,0 +1,208 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Alta de Trabajador - TASAL{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Alta de Trabajador</h1>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title mb-0">Ingresa los datos del trabajador</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Campos personales -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="apellido_paterno">Apellido Paterno</label>
+                        <input type="text" name="apellido_paterno" id="apellido_paterno" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="apellido_materno">Apellido Materno</label>
+                        <input type="text" name="apellido_materno" id="apellido_materno" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="categoria">Categoría</label>
+                        <input type="text" name="categoria" id="categoria" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" name="telefono" id="telefono" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="curp">CURP</label>
+                        <input type="text" name="curp" id="curp" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="nss">NSS</label>
+                        <input type="text" name="nss" id="nss" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Proyectos -->
+                <div class="mb-3">
+                    <label for="proyectos">Proyectos</label>
+                    <select name="proyectos" id="proyectos" class="form-control" multiple>
+                        {% for p in proyectos %}
+                            <option value="{{ p.id }}">{{ p.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Foto -->
+                <div class="mb-3">
+                    <label>Fotografía</label>
+                    <div class="mb-2">
+                        <video id="video" width="320" height="240" autoplay class="border"></video>
+                    </div>
+                    <button type="button" class="btn btn-secondary mb-2" id="captureBtn">Capturar Foto</button>
+                    <canvas id="canvas" width="320" height="240" style="display: none;" class="border"></canvas>
+                    <input type="hidden" name="fotografia" id="fotografia">
+
+                    <div class="mt-2">
+                        <label for="fileInput">O sube una imagen</label>
+                        <input type="file" id="fileInput" accept="image/*" class="form-control" onchange="convertToBase64(event)">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">Guardar Trabajador</button>
+            </form>
+        </div>
+    </div>
+
+    {% if nueva_credencial %}
+    <hr>
+    <div class="credential-to-print mx-auto mt-4">
+        <div class="cred-header">Trabajador de TASAL</div>
+
+        <div class="cred-body">
+            <p><strong>Nombre:</strong> {{ nueva_credencial.nombre }} {{ nueva_credencial.apellido_paterno }} {{ nueva_credencial.apellido_materno }}</p>
+            <p><strong>Categoría:</strong> {{ nueva_credencial.categoria }}</p>
+            <p><strong>NSS:</strong> {{ nueva_credencial.nss }}</p>
+        </div>
+
+        <div class="cred-bottom">
+            <div class="cred-foto">
+                {% if nueva_credencial.fotografia %}
+                    <img src="{{ nueva_credencial.fotografia.url }}" alt="Foto" style="width: 90px; height: 120px; object-fit: cover;">
+                {% endif %}
+            </div>
+            <div class="cred-qr">
+                {% if nueva_credencial.codigo_qr %}
+                    <img src="{{ nueva_credencial.codigo_qr.url }}" alt="QR" style="width: 110px; height: 110px;">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div class="text-center mt-2 no-print">
+    <button class="btn btn-primary" onclick="window.print()">Imprimir Credencial</button>
+</div>
+
+<!-- Scripts -->
+<script>
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        const video = document.getElementById('video');
+        video.srcObject = stream;
+    });
+}
+
+document.getElementById('captureBtn').addEventListener('click', function() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    document.getElementById('fotografia').value = canvas.toDataURL('image/png');
+    canvas.style.display = 'block';
+});
+
+function convertToBase64(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('fotografia').value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+</script>
+
+<!-- Estilos de impresión -->
+<style>
+@media print {
+    @media print {
+  .no-print {
+    display: none !important;
+  }
+}
+body * {
+    visibility: hidden;
+  }
+  .credential-to-print, .credential-to-print * {
+    visibility: visible !important;
+    -webkit-print-color-adjust: exact;
+  }
+  .credential-to-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 7cm;
+    height: 9cm;
+    padding: 0.3cm;
+    border: 1px solid black;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+  }
+}
+
+/* Diseño de la credencial */
+.credential-to-print {
+    width: 7cm;
+    height: 9cm;
+    padding: 10px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.cred-header {
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    padding: 5px 0;
+    font-size: 16px;
+}
+
+.cred-body {
+    font-size: 12px;
+}
+
+.cred-bottom {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.cred-foto img,
+.cred-qr img {
+    border: 1px solid #ccc;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Bienvenido - TASAL{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h1 class="mb-4">Bienvenido a Constructora Electromecánica TASAL</h1>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <a href="{% url 'alta-trabajador' %}" class="btn btn-primary btn-lg btn-block">
+        ALTA DE PERSONAL
+      </a>
+    </div>
+    <div class="col-md-6 mb-3">
+      <a href="{% url 'asistencia-elegir' %}" class="btn btn-success btn-lg btn-block">
+        ASISTENCIA
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
