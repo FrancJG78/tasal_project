@@ -22,6 +22,26 @@ urlpatterns = [
     path('bienvenido/', bienvenido_view, name='bienvenido'),
     # Incluir las rutas de la app "asistencia":
     path('api/', include('asistencia.urls')),
+     from django.urls import path, include
+ from django.contrib import admin
+
+ urlpatterns = [
+     path('admin/', admin.site.urls),
+     path('accounts/', include('django.contrib.auth.urls')),
+-    path('',   some_home_view,    name='home'),
+-    path('bienvenido/', bienvenido_view, name='bienvenido'),
+-    path('api/', include('asistencia.api_urls')),
++    path('',   some_home_view,    name='home'),
++    path('bienvenido/', bienvenido_view, name='bienvenido'),
++    path('api/', include('asistencia.api_urls')),
+
++    # <-- AÑADE ESTA LÍNEA PARA QUE /asistencia/… apunte a tu app
++    path('asistencia/', include('asistencia.urls')),
+
+     # si tienes media
+     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+ ]
+
 ]
 
 if settings.DEBUG:
