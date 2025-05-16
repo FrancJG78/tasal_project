@@ -19,7 +19,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SECRET_KEY = 'django-insecure-!&h-xq@u-r84k@xy$...)'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -90,3 +90,5 @@ LOGIN_REDIRECT_URL = '/bienvenido/'
 
 # (Opcional) Si quieres que, al hacer logout, también redirija a otra parte:
 # LOGOUT_REDIRECT_URL = '/api/asistencia-elegir/'
+# ruta absoluta donde Django volcará todos los staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

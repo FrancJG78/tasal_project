@@ -1,69 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}TASAL - Módulo de Asistencia{% endblock %}</title>
-    <!-- Incluir Bootstrap vía CDN -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    {% block extra_head %}{% endblock %}
-    <link rel="manifest" href="/static/manifest.json">
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}TASAL - Módulo de Asistencia{% endblock %}</title>
 
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- PWA: manifest y theme color -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#007bff">
+
+  <!-- Registrar el Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register("{% static 'sw.js' %}")
+        .then(reg => console.log('SW registrado con éxito:', reg.scope))
+        .catch(err => console.error('Error registrando SW:', err));
+    }
+  </script>
+
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Navbar (opcional) -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'bienvenido' %}">TASAL</a>
-    </nav>
+  {% if request.path != '/accounts/login/' %}
+    <!-- tu navbar aquí… -->
+  {% endif %}
 
-    <div class="container mt-4">
-        <!-- Mensajes Flash -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
+  <div class="container mt-4">
+    {% if messages %}
+      {% for message in messages %}
+        <!-- tus alertas aquí… -->
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
 
-        {% block content %}
-        {% endblock %}
-    </div>
+  <!-- JS de Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Incluir jQuery y Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
-<script src="/static/js/offline.js"></script>
+  <!-- Tu lógica offline (Dexie, cola, etc.) -->
+  <script src="{% static 'js/offline.js' %}"></script>
 
-    {% block extra_js %}{% endblock %}
-    <script>
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/static/service-worker.js')
-            .then(function(registration) {
-              console.log('Service Worker registrado con éxito:', registration.scope);
-            })
-            .catch(function(error) {
-              console.log('Error al registrar el Service Worker:', error);
-            });
-        }
-      </script>
-      
+  {% block extra_js %}{% endblock %}
 </body>
 </html>
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/static/service-worker.js')
-        .then(function(registration) {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-        })
-        .catch(function(error) {
-            console.log('Error al registrar el Service Worker:', error);
-        });
-    }
-</script>
-

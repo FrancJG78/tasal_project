@@ -1,21 +1,24 @@
 {
-    "name": "TASAL - Asistencia",
-    "short_name": "TASAL",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007bff",
-    "icons": [
-      {
-        "src": "/static/img/icon-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/static/img/icon-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
-  
+  "name": "TASAL - Asistencia",
+  "short_name": "TASAL",
+  // Cuando el usuario lance la PWA desde el icono,
+  // abrirá esta URL (tu página de escaneo offline)
+  "start_url": "/asistencia/scan-offline/",
+  // Limita el área de navegación de la PWA
+  "scope": "/asistencia/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "/static/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
