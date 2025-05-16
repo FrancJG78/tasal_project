@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Proyecto, Trabajador, Asistencia
+from .models import Dispositivo
 
 admin.site.register(Proyecto)
 admin.site.register(Trabajador)
