@@ -1,48 +1,40 @@
 # gestion_obra/urls.py
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
 from django.conf import settings
 from django.conf.urls.static import static
-from asistencia.views import bienvenido_view  # Asegúrate de que esté definida
+from asistencia.views import bienvenido_view
 
-# Vista simple para la página principal (opcional)
+# Vista sencilla para la página principal
 def home(request):
-    return HttpResponse("Bienvenido a Costructora Electromecánica TASAL - Centro de Gestión")
+    return HttpResponse("Bienvenido a Constructora Electromecánica TASAL - Centro de Gestión")
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
-    # Rutas de autenticación:
-    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    # Página principal (opcional)
+
+    # Login / Logout
+    path('accounts/login/',
+         auth_views.LoginView.as_view(template_name='registration/login.html'),
+         name='login'),
+    path('accounts/logout/',
+         auth_views.LogoutView.as_view(),
+         name='logout'),
+
+    # Home y Bienvenida
     path('', home, name='home'),
-    # Vista de bienvenida:
     path('bienvenido/', bienvenido_view, name='bienvenido'),
-    # Incluir las rutas de la app "asistencia":
-    path('api/', include('asistencia.urls')),
-     from django.urls import path, include
- from django.contrib import admin
 
- urlpatterns = [
-     path('admin/', admin.site.urls),
-     path('accounts/', include('django.contrib.auth.urls')),
--    path('',   some_home_view,    name='home'),
--    path('bienvenido/', bienvenido_view, name='bienvenido'),
--    path('api/', include('asistencia.api_urls')),
-+    path('',   some_home_view,    name='home'),
-+    path('bienvenido/', bienvenido_view, name='bienvenido'),
-+    path('api/', include('asistencia.api_urls')),
+    # API REST (ModelViewSets)
+    path('api/', include('asistencia.api_urls')),
 
-+    # <-- AÑADE ESTA LÍNEA PARA QUE /asistencia/… apunte a tu app
-+    path('asistencia/', include('asistencia.urls')),
-
-     # si tienes media
-     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
- ]
-
+    # Vistas web de la app Asistencia (scanner, formularios…)
+    path('asistencia/', include('asistencia.urls')),
 ]
 
+# Servir media en DEBUG
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
