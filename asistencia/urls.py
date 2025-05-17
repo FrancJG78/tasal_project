@@ -11,7 +11,8 @@ from .views import (
     RegistrarAsistenciaQRView,
     alta_trabajador_view,
     asistencia_elegir_proyecto_view,
-    bienvenido_view
+    bienvenido_view,
+    scan_offline_view,    # <-- import añadido
 )
 
 router = routers.DefaultRouter()
@@ -29,4 +30,7 @@ urlpatterns = [
     path('alta-trabajador/', alta_trabajador_view,                  name='alta-trabajador'),
     path('asistencia-elegir/', asistencia_elegir_proyecto_view,     name='asistencia-elegir'),
     path('bienvenido/',      bienvenido_view,                       name='bienvenido'),
+
+    # Ruta para tu escáner offline:
+    path('scan-offline/',    scan_offline_view,                     name='scan-offline'),
 ]
