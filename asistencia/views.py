@@ -317,3 +317,10 @@ class RegistrarAsistenciaQRView(APIView):
 
 def bienvenido_view(request):
     return render(request, 'bienvenido.html')
+from django.shortcuts import render
+
+def scan_offline_view(request):
+    """
+    Página offline que abre la cámara y escanea el QR.
+    """
+    return render(request, "asistencia/scan_offline.html")
